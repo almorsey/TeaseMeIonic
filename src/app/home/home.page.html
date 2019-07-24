@@ -1,14 +1,40 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openSettings()">
+        <ion-icon slot="icon-only" name="settings"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>
-      Ionic Blank
+      Tease Me
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+  <ion-refresher #refresher slot="fixed" (ionRefresh)="setTeases(refresher)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-card button (click)="newTease()">
+      <ion-item>
+        <ion-label>Download new tease</ion-label>
+      </ion-item>
+    </ion-card>
+    <ion-item-divider>
+    </ion-item-divider>
+    <ion-card *ngFor="let tease of teases">
+      <ion-item-sliding>
+        <ion-item button (click)="loadTease(tease)">
+          <ion-label>{{ tease }}</ion-label>
+        </ion-item>
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="deleteTease(tease)">
+            <ion-icon slot="start" name="trash"></ion-icon>
+            Delete
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-card>
+  </ion-list>
 </ion-content>

@@ -1,5 +1,7 @@
 {
   "name": "Tease-Me",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        Close
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Download Tease</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-progress-bar *ngIf="downloading" [value]="progressValue" [type]="progressType"></ion-progress-bar>
+
+<ion-content>
+  <form #teaseForm="ngForm" (ngSubmit)="downloadTease(teaseForm)">
+    <ion-item>
+      <ion-label position="floating">Tease URL</ion-label>
+      <ion-input required appMilovanaUrl name="url" type="url" (ngModel)="url" #urlRef="ngModel" [value]="url">
+      </ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="urlRef.invalid && (urlRef.touched || urlRef.dirty)">
+      <p>Please paste the url of the <a href="https://milovana.com/webteases/">milovana tease</a> you want to download
+      </p>
+    </ion-text>
+    <ion-button expand="block" color="primary" type="submit" [disabled]="teaseForm.invalid || downloading">
+      Download
+    </ion-button>
+  </form>
+</ion-content>
