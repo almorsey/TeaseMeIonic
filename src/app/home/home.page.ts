@@ -19,10 +19,10 @@ export class HomePage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.setTeases();
+    this.refreshTeases();
   }
 
-  async setTeases(refresher?: IonRefresher) {
+  async refreshTeases(refresher?: IonRefresher) {
     let retry = 0;
     while (retry < 5) {
       const dirs = await this.file.listDir(this.data.dataDir, this.data.teasesFolderName);
@@ -46,7 +46,9 @@ export class HomePage implements OnInit {
     modal.componentProps = {
       modal,
     };
-    return await modal.present();
+    await modal.present();
+    await modal.onDidDismiss();
+    this.refreshTeases();
   }
 
   loadTease(name: string) {
