@@ -23,6 +23,9 @@
     </ion-card>
     <ion-item-divider>
     </ion-item-divider>
+    <ion-item *ngIf="!teases || teases.length === 0" lines="none">
+      <ion-label>No teases found</ion-label>
+    </ion-item>
     <ion-card *ngFor="let tease of teases">
       <ion-item-sliding>
         <ion-item button (click)="loadTease(tease)">
