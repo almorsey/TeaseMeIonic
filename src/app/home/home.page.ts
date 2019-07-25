@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { File } from '@ionic-native/file/ngx';
-import { IonRefresher, ModalController, Platform } from '@ionic/angular';
+import { IonRefresher, ModalController } from '@ionic/angular';
+import { DataService } from '../data.service';
 import { NewTeasePage } from '../new-tease/new-tease.page';
 
 @Component({
@@ -25,6 +26,10 @@ export class HomePage implements OnInit {
   async refreshTeases(refresher?: IonRefresher) {
     let retry = 0;
     while (retry < 5) {
+      const exists = await this.file.checkDir(this.data.dataDir, this.data.teasesFolderName).catch(() => false);
+      if (!exists) {
+        break;
+      }
       const dirs = await this.file.listDir(this.data.dataDir, this.data.teasesFolderName);
       if (dirs) {
         this.teases = dirs.map(value => value.name);
