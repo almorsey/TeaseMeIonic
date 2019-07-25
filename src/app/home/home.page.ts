@@ -60,8 +60,13 @@ export class HomePage implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  deleteTease(name: string) {
-    throw new Error('Method not implemented.');
+  async deleteTease(name: string) {
+    // const media = await this.file.listDir(`${this.data.dataDir}${this.data.teasesFolderName}/${name}`, 'media');
+    // for (const entry of media) {
+    //   entry.remove(() => {});
+    // }
+    await this.file.removeRecursively(this.data.dataDir + this.data.teasesFolderName, name);
+    this.refreshTeases();
   }
 
   openSettings() {
