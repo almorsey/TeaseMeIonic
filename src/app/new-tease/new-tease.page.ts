@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { File } from '@ionic-native/file/ngx';
-import { ModalController, Platform } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-new-tease',
@@ -21,7 +22,7 @@ export class NewTeasePage implements OnInit {
   constructor(
     private http: HttpClient,
     private file: File,
-    private platform: Platform,
+    private data: DataService,
   ) { }
 
   ngOnInit() {
@@ -51,11 +52,9 @@ export class NewTeasePage implements OnInit {
         `https://cors-anywhere.herokuapp.com/https://milovana.com/webteases/geteosscript.php?id=${teaseId}`)
         // .pipe(catchError(val => of(val)))
         .toPromise();
-      const dataDir = this.file.externalRootDirectory; // TODO: Try browser
-      console.log(dataDir);
-      await this.file.createDir(dataDir, 'Teases', false).catch(() => { }); // TODO: Make Teases/ changeable
-      await this.file.createDir(dataDir + 'Teases', title, true).catch(() => { });
-      await this.file.createDir(dataDir + `Teases/${title}`, 'media', false).catch(() => { });
+      await this.file.createDir(this.data.dataDir, this.data.teasesFolderName, false).catch(() => { });
+      await this.file.createDir(this.data.dataDir + this.data.teasesFolderName, title, true).catch(() => { });
+      await this.file.createDir(`${this.data.dataDir}${this.data.teasesFolderName}/${title}`, 'media', false).catch(() => { });
       const filenames = Object.keys(teaseScript.files);
       let filesDone = 0;
       this.progressType = 'determinate';
@@ -67,11 +66,11 @@ export class NewTeasePage implements OnInit {
           this.downloading = false;
         }
       }));
-      await this.file.createFile(dataDir + `Teases/${title}`, 'script.json', true).catch(reason => {
+      await this.file.createFile(`${this.data.dataDir}${this.data.teasesFolderName}/${title}`, 'script.json', true).catch(reason => {
         console.error('createFile script');
         console.log(reason);
       });
-      await this.file.writeFile(dataDir + `Teases/${title}`, 'script.json', teaseScript, {
+      await this.file.writeFile(`${this.data.dataDir}${this.data.teasesFolderName}/${title}`, 'script.json', teaseScript, {
         replace: true,
       }).catch(reason => {
         console.error('createFile script');
@@ -89,12 +88,11 @@ export class NewTeasePage implements OnInit {
       })
       // .pipe(catchError(val => of(val)))
       .toPromise();
-    const dataDir = this.file.externalRootDirectory;
-    await this.file.createFile(dataDir + `Teases/${title}/media`, filename, true).catch(reason => {
+    await this.file.createFile(`${this.data.dataDir}${this.data.teasesFolderName}/${title}/media`, filename, true).catch(reason => {
       console.error('createFile');
       console.log(reason);
     });
-    await this.file.writeFile(dataDir + `Teases/${title}/media`, filename, response, {
+    await this.file.writeFile(`${this.data.dataDir}${this.data.teasesFolderName}/${title}/media`, filename, response, {
       replace: true,
     }).catch(reason => {
       console.error('writeFile');

@@ -14,7 +14,7 @@ export class HomePage implements OnInit {
 
   constructor(
     private file: File,
-    private platform: Platform,
+    private data: DataService,
     private modalController: ModalController,
   ) { }
 
@@ -25,9 +25,7 @@ export class HomePage implements OnInit {
   async setTeases(refresher?: IonRefresher) {
     let retry = 0;
     while (retry < 5) {
-      const dataDir = this.file.externalRootDirectory;
-      const dirs = await this.file.listDir(dataDir, 'Teases');
-      console.log(dirs);
+      const dirs = await this.file.listDir(this.data.dataDir, this.data.teasesFolderName);
       if (dirs) {
         this.teases = dirs.map(value => value.name);
         break;
